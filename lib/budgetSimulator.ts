@@ -175,9 +175,7 @@ export type ScenarioComparison = {
 
 export function compareScenarios(
   a: SimulatorResults,
-  b: SimulatorResults,
-  _labelA: string,
-  _labelB: string
+  b: SimulatorResults
 ): ScenarioComparison[] {
   const rows: {
     metric: string;

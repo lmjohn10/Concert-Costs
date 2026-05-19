@@ -480,8 +480,8 @@ export function BudgetSimulator() {
     [scenarioB]
   );
   const comparison = useMemo(
-    () => compareScenarios(resultsA, resultsB, scenarioA.label, scenarioB.label),
-    [resultsA, resultsB, scenarioA.label, scenarioB.label]
+    () => compareScenarios(resultsA, resultsB),
+    [resultsA, resultsB]
   );
 
   const chartData = [

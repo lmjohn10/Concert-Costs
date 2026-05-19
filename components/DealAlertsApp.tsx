@@ -108,8 +108,27 @@ export function DealAlertsApp() {
   }, [supabase]);
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    let cancelled = false;
+    (async () => {
+      const [a, s, n] = await Promise.all([
+        supabase.from("deal_alerts").select("*").order("created_at", { ascending: false }),
+        supabase.from("price_snapshots").select("*").order("recorded_at", { ascending: true }),
+        supabase
+          .from("deal_notifications")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(50),
+      ]);
+      if (cancelled) return;
+      if (a.data) setAlerts(a.data.map(mapAlert));
+      if (s.data) setSnapshots(s.data.map(mapSnapshot));
+      if (n.data) setNotifications(n.data as DealNotification[]);
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [supabase]);
 
   const selectedAlert = alerts.find((a) => a.id === selectedAlertId);
 

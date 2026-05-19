@@ -68,8 +68,22 @@ export function TourMemoryApp({ concerts }: Props) {
   }, [supabase]);
 
   useEffect(() => {
-    void loadMemories();
-  }, [loadMemories]);
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase.from("concert_memories").select("*");
+      if (cancelled) return;
+      const map: Record<string, ConcertMemory> = {};
+      (data ?? []).forEach((row) => {
+        const m = memoryFromRow(row as Record<string, unknown>);
+        map[m.concert_id] = m;
+      });
+      setMemories(map);
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [supabase]);
 
   const openEditor = (concert: Concert) => {
     setExpandedId(concert.id);
