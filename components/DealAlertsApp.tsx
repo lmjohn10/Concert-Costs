@@ -108,7 +108,7 @@ export function DealAlertsApp() {
   }, [supabase]);
 
   useEffect(() => {
-    load();
+    void load();
   }, [load]);
 
   const selectedAlert = alerts.find((a) => a.id === selectedAlertId);

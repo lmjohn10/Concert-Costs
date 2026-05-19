@@ -17,15 +17,17 @@ export function useTheme() {
   return useContext(ThemeContext);
 }
 
+function readStoredTheme(): string {
+  if (typeof window === "undefined") return DEFAULT_THEME;
+  return localStorage.getItem(STORAGE_KEY) || DEFAULT_THEME;
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState(DEFAULT_THEME);
+  const [theme, setThemeState] = useState(readStoredTheme);
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    const initial = stored || DEFAULT_THEME;
-    setThemeState(initial);
-    document.documentElement.setAttribute("data-theme", initial);
-  }, []);
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   const setTheme = (next: string) => {
     setThemeState(next);

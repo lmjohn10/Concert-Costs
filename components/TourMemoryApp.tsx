@@ -68,7 +68,7 @@ export function TourMemoryApp({ concerts }: Props) {
   }, [supabase]);
 
   useEffect(() => {
-    loadMemories();
+    void loadMemories();
   }, [loadMemories]);
 
   const openEditor = (concert: Concert) => {

@@ -59,8 +59,6 @@ function ScenarioPanel({
   inputs: SimulatorInputs;
   onChange: (next: SimulatorInputs) => void;
 }) {
-  const accent = scenarioKey === "a" ? "primary" : "secondary";
-
   const update = <K extends keyof SimulatorInputs>(
     key: K,
     value: SimulatorInputs[K]
@@ -395,6 +393,66 @@ function ResultCard({
   );
 }
 
+function ResultsStrip({
+  label,
+  results,
+}: {
+  label: string;
+  results: ReturnType<typeof calculateScenario>;
+}) {
+  const plVariant =
+    results.profitLoss > 0
+      ? "success"
+      : results.profitLoss < 0
+        ? "error"
+        : "default";
+
+  return (
+    <div className="space-y-3">
+      <h4 className="font-bold text-base">{label} — live results</h4>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <ResultCard
+          title="Total projected cost"
+          value={formatMoney(results.totalProjectedCost)}
+          desc="All expenses incl. fees"
+        />
+        <ResultCard
+          title="Total revenue"
+          value={formatMoney(results.totalRevenue)}
+          desc={`${results.effectiveAttendance} effective attendees`}
+          variant="accent"
+        />
+        <ResultCard
+          title="Profit / loss"
+          value={formatMoney(results.profitLoss)}
+          desc={
+            results.profitLoss >= 0 ? "Organizer surplus" : "Organizer deficit"
+          }
+          variant={plVariant}
+        />
+        <ResultCard
+          title="Per-person split"
+          value={formatMoney(results.perPersonSplit)}
+          desc="If total cost is split evenly"
+        />
+        <ResultCard
+          title="Break-even attendance"
+          value={
+            results.breakEvenAttendance !== null
+              ? String(results.breakEvenAttendance)
+              : "—"
+          }
+          desc="Tickets needed to cover fixed costs"
+        />
+        <ResultCard
+          title="Avg ticket (after dynamic pricing)"
+          value={formatMoney(results.avgTicketPrice)}
+        />
+      </div>
+    </div>
+  );
+}
+
 export function BudgetSimulator() {
   const [scenarioA, setScenarioA] = useState(() =>
     createDefaultScenario("Baseline")
@@ -444,65 +502,6 @@ export function BudgetSimulator() {
     },
   ];
 
-  function ResultsStrip({
-    label,
-    results,
-  }: {
-    label: string;
-    results: ReturnType<typeof calculateScenario>;
-  }) {
-    const plVariant =
-      results.profitLoss > 0
-        ? "success"
-        : results.profitLoss < 0
-          ? "error"
-          : "default";
-
-    return (
-      <div className="space-y-3">
-        <h4 className="font-bold text-base">{label} — live results</h4>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          <ResultCard
-            title="Total projected cost"
-            value={formatMoney(results.totalProjectedCost)}
-            desc="All expenses incl. fees"
-          />
-          <ResultCard
-            title="Total revenue"
-            value={formatMoney(results.totalRevenue)}
-            desc={`${results.effectiveAttendance} effective attendees`}
-            variant="accent"
-          />
-          <ResultCard
-            title="Profit / loss"
-            value={formatMoney(results.profitLoss)}
-            desc={
-              results.profitLoss >= 0 ? "Organizer surplus" : "Organizer deficit"
-            }
-            variant={plVariant}
-          />
-          <ResultCard
-            title="Per-person split"
-            value={formatMoney(results.perPersonSplit)}
-            desc="If total cost is split evenly"
-          />
-          <ResultCard
-            title="Break-even attendance"
-            value={
-              results.breakEvenAttendance !== null
-                ? String(results.breakEvenAttendance)
-                : "—"
-            }
-            desc="Tickets needed to cover fixed costs"
-          />
-          <ResultCard
-            title="Avg ticket (after dynamic pricing)"
-            value={formatMoney(results.avgTicketPrice)}
-          />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-8 animate-fade-in-up">

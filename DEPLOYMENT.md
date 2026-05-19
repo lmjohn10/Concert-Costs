@@ -98,10 +98,22 @@ Follow prompts. Add env vars in the Vercel dashboard when asked or afterward.
 
 | Problem | Fix |
 |---------|-----|
-| Build fails on Vercel | Open the failed deployment → **Build Logs**; often a missing env var |
+| Build fails on Vercel | Open failed deployment → **Building** → read the red error line |
+| `No Next.js version detected` | **Root Directory** must be `Concert-Costs` (folder with `package.json`) |
+| Empty site / 404 | Same — wrong root folder deployed |
+| Missing env / Supabase error | Add both `NEXT_PUBLIC_*` variables in Vercel, then **Redeploy** |
 | Login works locally but not online | Update Supabase **Site URL** and **Redirect URLs** |
-| Blank page / crash | Check browser console; confirm both `NEXT_PUBLIC_*` vars are set |
-| Wrong folder deployed | Set **Root Directory** to `Concert-Costs` in Vercel project settings |
+| Wrong folder deployed | Vercel → Settings → General → **Root Directory** → `Concert-Costs` |
+
+### Vercel settings checklist
+
+- **Root Directory:** `Concert-Costs` (if your GitHub repo is the parent folder) or `.` (if the repo is only the app)
+- **Framework:** Next.js
+- **Node.js Version:** 20.x (Project → Settings → General)
+- **Build Command:** `npm run build` (default — uses webpack for stability)
+- **Environment variables:** both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` for Production
+
+After fixing settings, click **Deployments** → latest failed deploy → **Redeploy**.
 
 ---
 

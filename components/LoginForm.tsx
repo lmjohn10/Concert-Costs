@@ -56,7 +56,6 @@ export function LoginForm() {
 
   return (
     <>
-      {/* eslint-disable-next-line */}
       <div className="card bg-base-100 shadow-xl w-full transition-shadow duration-300 hover:shadow-2xl rounded-2xl">
         <div className="card-body">
           <h2 className="card-title justify-center">
